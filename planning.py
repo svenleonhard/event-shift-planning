@@ -127,7 +127,7 @@ def mating(parents, method='Single Point'):
     return offsprings
 
 def mutation(individual, upper_limit, lower_limit, muatation_rate=2, 
-    method='Reset', standard_deviation = 0.001):
+    method='Replace', standard_deviation = 0.001):
     gene = [randint(0, 7)]
     for x in range(muatation_rate-1):
         gene.append(randint(0, 7))
@@ -143,17 +143,15 @@ def mutation(individual, upper_limit, lower_limit, muatation_rate=2,
             mutated_individual[x] = round(rnd()* \
                 (upper_limit-lower_limit)+lower_limit,1)
     if method == 'Replace':
-        for x in range(muatation_rate):
-            mutated_individual[x] = individual
-            new_worker = randint(lower_limit, upper_limit)
-            position = randint(0, len(individual) - 1)
-            if new_worker in individual:
-                worker_index = individual.index(new_worker)
-                old_worker = mutated_individual[x][position].copy()
-                mutated_individual[x][position] = new_worker
-                mutated_individual[x][worker_index] = old_worker
-            else:
-                mutated_individual[x][position] = new_worker   
+        new_worker = randint(lower_limit, upper_limit)
+        position = randint(0, len(individual) - 1)
+        if new_worker in individual:
+            worker_index = individual.index(new_worker)
+            old_worker = mutated_individual[position]
+            mutated_individual[position] = new_worker
+            mutated_individual[worker_index] = old_worker
+        else:
+            mutated_individual[position] = new_worker   
 
     return mutated_individual
 
