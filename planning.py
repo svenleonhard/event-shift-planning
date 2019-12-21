@@ -5,9 +5,15 @@ from random import random as rnd
 from random import gauss, randrange
 
 def individual(number_of_genes, upper_limit, lower_limit):
-    individual=[round(rnd()*(upper_limit-lower_limit)
-                +lower_limit,1) for x in range(number_of_genes)]
-    return individual 
+    gens=[]
+
+    for x in range(number_of_genes):
+        random_int = randint(lower_limit,upper_limit)
+        while random_int in gens:
+            random_int = randint(lower_limit,upper_limit)
+        gens.append(random_int)
+        
+    return gens
 
 def population(number_of_individuals,
                number_of_genes, upper_limit, lower_limit):
@@ -15,8 +21,16 @@ def population(number_of_individuals,
         for x in range(number_of_individuals)]
     
 def fitness_calculation(individual):
-    fitness_value = sum(individual)
+    fitness_value = 0
+    for i in range(len(individual)):
+        fitness_value = fitness_value + get_preference_for_worker(individual[i], i)**2
+
     return fitness_value
+
+def get_preference_for_worker(worker_id, category):
+    preferenecs = np.array([[0,1,2,2,1], [1,1,1,1,1], [2,2,0,0,0], [0,1,1,2,2], [2,1,1,1,1], [2,2,2,2,1], [1,1,2,2,1], [2,2,2,0,0]])
+    return preferenecs[worker_id-1, category]
+
 
 def roulette(cum_sum, chance):
     veriable = list(cum_sum.copy())
@@ -199,7 +213,7 @@ if __name__== "__main__":
     Result_file = 'GA_Results.txt'
     # Creating the First Generation
 
-    pop = population(20,8,1,0)
+    pop = population(20,5,8,1) # 20 individuums, 5 gens--> 5 jobs, max: 8 min:1
     gen = []
     gen.append(first_generation(pop))
     fitness_avg = np.array([sum(gen[0]['Fitness'])/
@@ -211,13 +225,13 @@ if __name__== "__main__":
     logger.info(gen)
     finish = False
     while finish == False:
-        if max(fitness_max) > 6:
+        if max(fitness_max) > 100:
             break
-        if max(fitness_avg) > 5:
+        if max(fitness_avg) > 75:
             break
         if fitness_similarity_chech(fitness_max, 50) == True:
             break
-        gen.append(next_generation(gen[-1],1,0))
+        gen.append(next_generation(gen[-1],8,1))
         fitness_avg = np.append(fitness_avg, sum(
             gen[-1]['Fitness'])/len(gen[-1]['Fitness']))
         fitness_max = np.append(fitness_max, max(gen[-1]['Fitness']))
