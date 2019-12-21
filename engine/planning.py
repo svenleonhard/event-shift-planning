@@ -22,7 +22,8 @@ class GAPlanning:
             while random_int in gens:
                 random_int = randint(lower_limit,upper_limit)
             gens.append(random_int)
-            
+
+        logger.info('individual generator: %s', gens)  
         return gens
 
     def population(self, number_of_individuals,
@@ -115,7 +116,20 @@ class GAPlanning:
                         self.roulette(cummulitive_sum,rnd())]
         return parents
 
-    def mating(self, parents, method='Single Point'):
+    def mating(self, parents, method='Order'):
+        if method == 'Order':
+            offsprings = []
+            length = len(parents[0])
+
+            left_index = randint(0, length - 2)
+            right_index = randint(left_index + 1, length - 1)
+
+            section_to_insert_1 = parents[0][left_index:right_index]
+            section_to_insert_2 = parents[1][left_index:right_index]
+
+            offsprings.append(self.order_crossover(parents[1], section_to_insert_1, length, left_index))
+            offsprings.append(self.order_crossover(parents[0], section_to_insert_2, length, left_index))
+
         if method == 'Single Point':
             pivot_point = randint(1, len(parents[0]))
             offsprings = [parents[0] \
@@ -134,6 +148,33 @@ class GAPlanning:
                 parents[0][pivot_point_1:pivot_point_2]+
                 [parents[1][pivot_point_2:]]])
         return offsprings
+
+    def order_crossover(self, parent, section_to_insert, length, left_index):
+        offspring = []
+
+        i = 0
+        j = 0
+
+        while i < left_index :
+            if not parent[j] in section_to_insert:
+                offspring.append(parent[j])
+                i = i + 1
+
+            j = j + 1
+
+        for to_insert in section_to_insert:
+            offspring.append(to_insert)
+
+        i = i + len(section_to_insert)
+
+        while i < length:
+            if not parent[j] in section_to_insert:
+                offspring.append(parent[j])
+                i = i + 1
+
+            j = j + 1
+        
+        return offspring
 
     def mutation(self, individual, upper_limit, lower_limit, muatation_rate=2, 
         method='Replace', standard_deviation = 0.001):
