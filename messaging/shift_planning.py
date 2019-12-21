@@ -3,7 +3,7 @@ from engine import ShiftPlanning
 import numpy as np
 import yaml, sys
 
-if __name__== "__main__":
+def make_plan():
 
     with open("worker.yml", 'r') as stream:
         try:
@@ -40,11 +40,8 @@ if __name__== "__main__":
                 }
 
                 new_dict.append(new_pair)
-
-            print(str(new_dict))
-            sys.stdout.flush()
+                
+            return new_dict
             
-
         except yaml.YAMLError as exc:
             print(exc)
-            sys.stdout.flush()
