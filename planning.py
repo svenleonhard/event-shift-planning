@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 from numpy.random import randint
 from random import random as rnd
 from random import gauss, randrange
@@ -189,6 +190,12 @@ def first_generation(pop):
     return {'Individuals': population, 'Fitness': sorted(fitness)}
 
 if __name__== "__main__":
+
+    logging.basicConfig()
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.info('welcome')
+
     Result_file = 'GA_Results.txt'
     # Creating the First Generation
 
@@ -201,6 +208,7 @@ if __name__== "__main__":
     res = open(Result_file, 'a')
     res.write('\n'+str(gen)+'\n')
     res.close()
+    logger.info(gen)
     finish = False
     while finish == False:
         if max(fitness_max) > 6:
