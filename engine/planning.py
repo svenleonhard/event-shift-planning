@@ -7,12 +7,12 @@ from random import gauss, randrange
 logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-logger.info('welcome')
+logger.info('welcome to planning')
 
 class GAPlanning:
 
-    def __init__(self, preference_matrix):
-        self.preference_matrix = preference_matrix
+    def __init__(self, fitness_calculation):
+        self.fitness_calculation = fitness_calculation
 
     def individual(self, number_of_genes, upper_limit, lower_limit):
         gens=[]
@@ -30,16 +30,6 @@ class GAPlanning:
                 number_of_genes, upper_limit, lower_limit):
         return [self.individual(number_of_genes, upper_limit, lower_limit) 
             for x in range(number_of_individuals)]
-        
-    def fitness_calculation(self, individual):
-        fitness_value = 0
-        for i in range(len(individual)):
-            fitness_value = fitness_value + self.get_preference_for_worker(individual[i], i)**2
-
-        return fitness_value
-
-    def get_preference_for_worker(self, worker_id, category):
-        return self.preference_matrix[worker_id-1, category]
 
 
     def roulette(self, cum_sum, chance):
@@ -193,15 +183,15 @@ class GAPlanning:
                 mutated_individual[x] = round(rnd()* \
                     (upper_limit-lower_limit)+lower_limit,1)
         if method == 'Replace':
-            new_worker = randint(lower_limit, upper_limit)
+            new_gene = randint(lower_limit, upper_limit)
             position = randint(0, len(individual) - 1)
-            if new_worker in individual:
-                worker_index = individual.index(new_worker)
-                old_worker = mutated_individual[position]
-                mutated_individual[position] = new_worker
-                mutated_individual[worker_index] = old_worker
+            if new_gene in individual:
+                gene_index = individual.index(new_gene)
+                old_gene = mutated_individual[position]
+                mutated_individual[position] = new_gene
+                mutated_individual[gene_index] = old_gene
             else:
-                mutated_individual[position] = new_worker   
+                mutated_individual[position] = new_gene
 
         return mutated_individual
 
@@ -225,7 +215,7 @@ class GAPlanning:
             for x in range(len(gen['Individuals']))]
         unsorted_individuals = mutated + [elit['Individuals']]
         unsorted_next_gen = \
-            [self.fitness_calculation(mutated[x]) 
+            [self.fitness_calculation.calculate(mutated[x]) 
             for x in range(len(mutated))]
         unsorted_fitness = [unsorted_next_gen[x]
             for x in range(len(gen['Fitness']))] + [elit['Fitness']]
@@ -254,7 +244,7 @@ class GAPlanning:
         return result
 
     def first_generation(self, pop):
-        fitness = [self.fitness_calculation(pop[x]) 
+        fitness = [self.fitness_calculation.calculate(pop[x]) 
             for x in range(len(pop))]
         sorted_fitness = sorted([[pop[x], fitness[x]]
             for x in range(len(pop))], key=lambda x: x[1])
