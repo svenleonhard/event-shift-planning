@@ -1,0 +1,55 @@
+christopher:
+    camera1: 1
+    camera2: 2
+    cutter: 0
+    regie: 0
+    sound: 0
+
+nils:
+    camera1: 1
+    camera2: 1
+    cutter: 1
+    regie: 1
+    sound: 0
+
+benjamin:
+    camera1: 0
+    camera2: 0
+    cutter: 2
+    regie: 2
+    sound: 0
+
+jan:
+    camera1: 2
+    camera2: 2
+    cutter: 0
+    regie: 0
+    sound: 0
+
+karin:
+    camera1: 2
+    camera2: 2
+    cutter: 0
+    regie: 1
+    sound: 0
+
+thorsten:
+    camera1: 1
+    camera2: 2
+    cutter: 0
+    regie: 0
+    sound: 1
+
+peter:
+    camera1: 1
+    camera2: 2
+    cutter: 1
+    regie: 0
+    sound: 1
+
+niklas:
+    camera1: 1
+    camera2: 2
+    cutter: 1
+    regie: 2
+    sound: 1
