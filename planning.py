@@ -142,6 +142,19 @@ def mutation(individual, upper_limit, lower_limit, muatation_rate=2,
         for x in range(muatation_rate):
             mutated_individual[x] = round(rnd()* \
                 (upper_limit-lower_limit)+lower_limit,1)
+    if method == 'Replace':
+        for x in range(muatation_rate):
+            mutated_individual[x] = individual
+            new_worker = randint(lower_limit, upper_limit)
+            position = randint(0, len(individual) - 1)
+            if new_worker in individual:
+                worker_index = individual.index(new_worker)
+                old_worker = mutated_individual[x][position].copy()
+                mutated_individual[x][position] = new_worker
+                mutated_individual[x][worker_index] = old_worker
+            else:
+                mutated_individual[x][position] = new_worker   
+
     return mutated_individual
 
 def next_generation(gen, upper_limit, lower_limit):
@@ -219,9 +232,9 @@ if __name__== "__main__":
     fitness_avg = np.array([sum(gen[0]['Fitness'])/
                             len(gen[0]['Fitness'])])
     fitness_max = np.array([max(gen[0]['Fitness'])])
-    res = open(Result_file, 'a')
-    res.write('\n'+str(gen)+'\n')
-    res.close()
+    # res = open(Result_file, 'a')
+    # res.write('\n'+str(gen)+'\n')
+    # res.close()
     logger.info(gen)
     finish = False
     while finish == False:
