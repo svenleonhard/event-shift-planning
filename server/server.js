@@ -1,10 +1,12 @@
-var express = require('express');
+const express = require('express');
+const cors = require("cors");
 var app = express();
 app.listen(3000, function () {
   console.log('server running on port 3000');
 })
 
 var amqp = require('amqplib/callback_api');
+app.use(cors());
 app.get('/plan', call_shift_planning);
 
 function call_shift_planning(req, res) {

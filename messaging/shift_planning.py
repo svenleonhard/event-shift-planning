@@ -36,7 +36,7 @@ def make_plan():
                 name = workers[plan[i] - 1]
                 new_pair = {
                     'task' : tasks[i],
-                    'worker' : name
+                    'assignee' : name
                 }
 
                 new_dict.append(new_pair)

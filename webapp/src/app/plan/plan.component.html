@@ -1,0 +1,17 @@
+<table class="table">
+
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Task</th>
+      <th scope="col">Assignee</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let planItem of plan">
+      <td>{{planItem.task}}</td>
+      <td>{{planItem.assignee}}</td>
+   </tr>
+  </tbody>
+
+</table>
