@@ -1,47 +1,47 @@
 from context import engine
 from engine import ShiftPlanning
 import numpy as np
-import yaml, sys
+import yaml, sys, json
 
 def make_plan(planConfig):
+    
+    planConfigDictString = str(planConfig)[2:-1]
+    planConfigDict = json.loads(planConfigDictString)
+    employees = planConfigDict['employees']
+    categories = planConfigDict['categories']
 
-    with open("worker.yml", 'r') as stream:
-        try:
-            data = yaml.safe_load(stream)
+    preference_matrix = []
+    for employee in employees:
 
-            workers = list(data.keys())
-            tasks = []
-            for task in data[workers[0]]:
-                tasks.append(task)
+        if len(employee['rating']) == len(categories):
+            employee_preferences = []
 
-            preference_matrix = []
-            for worker in data:
-                worker_preferences = []
+            for ratingItem in employee['rating']:
+                employee_preferences.append(ratingItem['rating'])
 
-                for task in tasks:
-                    worker_preferences.append(data[worker][task])
+            preference_matrix.append(employee_preferences)
 
-                preference_matrix.append(worker_preferences)
-            print(preference_matrix)
 
-            preferenecs = np.array(preference_matrix)
+    print(preference_matrix)
 
-            shift_planning = ShiftPlanning(preferenecs)
+    preferenecs = np.array(preference_matrix)
 
-            plan = shift_planning.plan()
+    shift_planning = ShiftPlanning(preferenecs)
 
-            new_dict = []
-            for i in range(len(plan)):
-                print('Task: ', tasks[i], 'Worker: ', workers[plan[i] - 1 ])
-                name = workers[plan[i] - 1]
-                new_pair = {
-                    'task' : tasks[i],
-                    'assignee' : name
+    plan = shift_planning.plan()
+
+    new_dict = []
+    for i in range(len(plan)):
+                
+        name = employees[plan[i] - 1]['employee']['name']
+        category = categories[i]['description']
+        new_pair = {
+            'category' : category,
+            'assignee' : name
                 }
 
-                new_dict.append(new_pair)
+        new_dict.append(new_pair)
+    
+    print(new_dict)
                 
-            return new_dict
-            
-        except yaml.YAMLError as exc:
-            print(exc)
+    return new_dict

@@ -13,9 +13,6 @@ export class PlanningService {
   constructor(public http: HttpClient) { }
 
   makePlan(planConfig: any): Observable<any> {
-    console.log('pc');
-    console.log(planConfig);
-
     return this.http.post<any>(this.url, planConfig);
   }
 

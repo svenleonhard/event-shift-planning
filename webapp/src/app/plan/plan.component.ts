@@ -1,5 +1,5 @@
 import { PlanningService } from './../planning.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-plan',
@@ -8,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlanComponent implements OnInit {
 
-  plan: [any];
+  @Input()
+  plan;
 
   constructor(public planningService: PlanningService) {
   }

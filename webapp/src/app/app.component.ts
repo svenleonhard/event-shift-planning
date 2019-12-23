@@ -17,6 +17,7 @@ export class AppComponent {
 
   categories = [];
   employees = [];
+  plan = [];
 
   categoryAdded(categories) {
     this.categories = categories;
@@ -35,7 +36,7 @@ export class AppComponent {
     };
 
     this.planningService.makePlan(planConfig).subscribe(plan => {
-      console.log(plan);
+      this.plan = plan;
     });
   }
 

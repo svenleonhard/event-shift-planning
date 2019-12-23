@@ -8,6 +8,8 @@ export class AppController {
   @Post()
   makePlan(@Body()planConfig: any): any {
     return this.appService.getPlan(planConfig).then(plan => {
+      Logger.log('plan finished:');
+      Logger.log(plan);
       return plan;
     });
   }
