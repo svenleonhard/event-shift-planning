@@ -1,0 +1,11 @@
+<div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="ratingLevel"  (change)="onChange()">
+  <label ngbButtonLabel class="btn-primary">
+    <input ngbButton type="radio" [value]="0">No
+  </label>
+  <label ngbButtonLabel class="btn-primary">
+    <input ngbButton type="radio" [value]="1">No matter
+  </label>
+  <label ngbButtonLabel class="btn-primary">
+    <input ngbButton type="radio" [value]="2">Yes
+  </label>
+</div>

@@ -1,0 +1,18 @@
+<h3>
+  Add new category
+</h3>
+<form [formGroup]="employeeForm" (ngSubmit)="onSubmit(employeeForm.value)">
+  <div class="form-group" >
+    <label for="employeeFormControlInput">Description</label>
+    <input type="text" class="form-control" id="employeeFormControlInput" formControlName="name"/>
+    <ng-container *ngFor="let category of categories">
+      <div>
+        <label for="employeeRatingFormControlInput">Description</label>
+        <app-category-rating [parentSubject]="parentSubject" [category]="category" (ratingChanged)="onRatingChanged($event)" id="employeeRatingFormControlInput"></app-category-rating>
+      </div>
+
+    </ng-container>
+
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

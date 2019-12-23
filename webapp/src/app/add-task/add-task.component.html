@@ -1,0 +1,20 @@
+<h3>
+  Add new category
+</h3>
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit(taskForm.value)">
+  <div class="form-group" >
+    <label for="taskDescriptionFormControlInput">Description</label>
+    <input type="text" class="form-control" id="taskDescriptionFormControlInput" formControlName="description"/>
+  </div>
+
+  <label for="taskCategoryFormControlInput">Select Category</label>
+  <select class="form-control" id="taskCategoryFormControlInput" formControlName="category">
+
+    <ng-container *ngFor="let category of categories">
+      <option  [ngValue]="category">{{ category.description }}</option>
+    </ng-container>
+  </select>
+
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
