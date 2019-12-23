@@ -4,7 +4,12 @@
 <div class="content" role="main">
   <app-add-category (categoryAdded)="categoryAdded($event)"></app-add-category>
   <app-add-task [categories]="categories"></app-add-task>
-  <app-add-employee [categories]="categories"></app-add-employee>
+  <app-add-employee (employeeAdded)="employeeAdded($event)" [categories]="categories"></app-add-employee>
+  <div class="list-group">
+    <ng-container *ngFor="let employeeItem of employees">
+      <app-employee-list [employeeItem]="employeeItem"></app-employee-list>
+    </ng-container>
+  </div>
   <app-plan></app-plan>
 </div>
 

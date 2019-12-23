@@ -1,0 +1,43 @@
+<!--<div class="list-group">
+  <div class="list-group-item list-group-item-action active">
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="isCollapsed = !isCollapsed"
+      [attr.aria-expanded]="!isCollapsed"
+      aria-controls="collapseExample">
+      Toggle
+    </button>
+  </div>
+  <div id="collapseExample" [ngbCollapse]="isCollapsed">
+    <div class="card">
+      <div class="card-body">
+        You can collapse this card by clicking Toggle
+      </div>
+    </div>
+  </div>
+</div>-->
+  <button
+    type="button"
+    class="list-group-item list-group-item-action"
+    (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed"
+    aria-controls="collapseExample"
+  >
+    {{ employeeItem.employee.name }}
+  </button>
+  <div id="collapseExample" [ngbCollapse]="!isCollapsed">
+    <div class="card">
+      <div class="card-body">
+        <ul class="list-group">
+          <ng-container *ngFor="let ratingItem of employeeItem.rating">
+            <li class="list-group-item">{{ ratingItem.category }}
+              <span class="badge badge-pill badge-primary float-right">{{ratingItem.rating | rating}}</span>
+            </li>
+
+
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+  </div>

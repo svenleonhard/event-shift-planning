@@ -9,9 +9,14 @@ export class AppComponent {
   title = 'webapp';
 
   categories = [];
+  employees = [];
 
   categoryAdded(categories) {
     this.categories = categories;
+  }
+
+  employeeAdded(employeeItem) {
+    this.employees.push(employeeItem);
   }
 
 }

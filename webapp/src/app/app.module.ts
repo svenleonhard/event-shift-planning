@@ -12,6 +12,8 @@ import { AddCategoryComponent } from './add-category/add-category.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AddTaskComponent } from './add-task/add-task.component';
 import { CategoryRatingComponent } from './category-rating/category-rating.component';
+import { EmployeeListComponent } from './employee-list/employee-list.component';
+import { RatingPipe } from './rating.pipe';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { CategoryRatingComponent } from './category-rating/category-rating.compo
     AddEmployeeComponent,
     AddCategoryComponent,
     AddTaskComponent,
-    CategoryRatingComponent
+    CategoryRatingComponent,
+    EmployeeListComponent,
+    RatingPipe
   ],
   imports: [
     BrowserModule,
