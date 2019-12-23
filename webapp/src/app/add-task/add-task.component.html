@@ -1,5 +1,5 @@
 <h3>
-  Add new category
+  Add Task
 </h3>
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit(taskForm.value)">
   <div class="form-group" >
@@ -7,7 +7,7 @@
     <input type="text" class="form-control" id="taskDescriptionFormControlInput" formControlName="description"/>
   </div>
 
-  <label for="taskCategoryFormControlInput">Select Category</label>
+  <label for="taskCategoryFormControlInput">Category</label>
   <select class="form-control" id="taskCategoryFormControlInput" formControlName="category">
 
     <ng-container *ngFor="let category of categories">
@@ -15,6 +15,9 @@
     </ng-container>
   </select>
 
+  <div class="mt-3">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+
 </form>

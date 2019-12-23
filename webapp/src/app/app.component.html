@@ -2,20 +2,60 @@
 <app-navbar></app-navbar>
 
 <div class="content" role="main">
-  <app-add-category (categoryAdded)="categoryAdded($event)"></app-add-category>
-  <app-add-task [categories]="categories"></app-add-task>
-  <app-add-employee (employeeAdded)="employeeAdded($event)" [categories]="categories"></app-add-employee>
-  <div class="list-group">
-    <ng-container *ngFor="let employeeItem of employees">
-      <app-employee-list [employeeItem]="employeeItem"></app-employee-list>
-    </ng-container>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="card mt-4">
+          <div class="card-body">
+            <app-add-category
+              (categoryAdded)="categoryAdded($event)"
+            ></app-add-category>
+          </div>
+        </div>
+        <div class="card mt-4">
+          <div class="card-body">
+            <app-add-task [categories]="categories"></app-add-task>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="card mt-4">
+          <div class="card-body">
+            <app-add-employee
+              (employeeAdded)="employeeAdded($event)"
+              [categories]="categories"
+            ></app-add-employee>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm"></div>
+    </div>
+
+    <div class="mt-4">
+      <h3>Employee List</h3>
+
+      <div class="list-group mt-4">
+        <ng-container *ngFor="let employeeItem of employees">
+          <app-employee-list [employeeItem]="employeeItem"></app-employee-list>
+        </ng-container>
+      </div>
+
+      <button type="button" class="btn btn-primary mt-4">Plan</button>
+
+
+    </div>
+
+
+
+    <div class="mt-4">
+      <h3>Plan</h3>
+      <app-plan ></app-plan>
+    </div>
+
   </div>
-  <app-plan></app-plan>
 </div>
 
-  <!-- Footer -->
-  <footer>
-
-  </footer>
+<!-- Footer -->
+<footer></footer>
 
 <router-outlet></router-outlet>
