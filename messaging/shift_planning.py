@@ -4,8 +4,7 @@ import numpy as np
 import yaml, sys, json, logging
 
 def make_plan(planConfig):
-    
-    try:
+    if 1==1:
         planConfigDictString = planConfig.decode("utf-8", "ignore")
         logging.info(planConfigDictString)
 
@@ -48,5 +47,3 @@ def make_plan(planConfig):
         print(new_dict)
                     
         return new_dict
-    except Exception as e:
-        logging.error(e)

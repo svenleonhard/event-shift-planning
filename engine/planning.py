@@ -18,9 +18,9 @@ class GAPlanning:
         gens=[]
 
         for x in range(number_of_genes):
-            random_int = randint(lower_limit,upper_limit)
+            random_int = randint(lower_limit,upper_limit + 1)
             while random_int in gens:
-                random_int = randint(lower_limit,upper_limit)
+                random_int = randint(lower_limit,upper_limit + 1)
             gens.append(random_int)
 
         logger.info('individual generator: %s', gens)  
@@ -111,8 +111,10 @@ class GAPlanning:
             offsprings = []
             length = len(parents[0])
 
-            left_index = randint(0, length - 2)
-            right_index = randint(left_index + 1, length - 1)
+            high = max(1, length - 2)
+            left_index = randint(0, high)
+            high = max(left_index + 2, length - 1)
+            right_index = randint(left_index + 1, high)
 
             section_to_insert_1 = parents[0][left_index:right_index]
             section_to_insert_2 = parents[1][left_index:right_index]
