@@ -3,7 +3,7 @@ from engine import ShiftPlanning
 import numpy as np
 import yaml, sys
 
-def make_plan():
+def make_plan(planConfig):
 
     with open("worker.yml", 'r') as stream:
         try:

@@ -7,7 +7,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async getPlan(): Promise<any> {
+  async getPlan(planConfig): Promise<any> {
     const open = amqp.connect('amqp://localhost');
 
     return await open.then(conn => {
@@ -16,7 +16,7 @@ export class AppService {
         .then(ch => {
           ch.assertQueue('simulations', { durable: false });
           ch.assertQueue('results', { durable: false });
-          ch.sendToQueue('simulations', Buffer.from(JSON.stringify([])));
+          ch.sendToQueue('simulations', Buffer.from(JSON.stringify(planConfig)));
 
           return new Promise((resolve, reject) => {
             ch.consume('results', msg => {

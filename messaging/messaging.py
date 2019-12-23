@@ -6,7 +6,7 @@ channel = connection.channel()
 channel.queue_declare(queue='simulations')
 channel.queue_declare(queue='results')
 def callback(ch, method, properties, body):
-  results = shift_planning.make_plan()
+  results = shift_planning.make_plan(body)
   # send a message back
   channel.basic_publish(exchange='', routing_key='results', body=json.dumps(results, ensure_ascii=False))
 # receive message and complete simulation

@@ -7,13 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class PlanningService {
 
-  url = 'http://localhost:3000/';
+  url = 'http://localhost:3000';
   categeories = [];
 
   constructor(public http: HttpClient) { }
 
-  getPlan(): Observable<any> {
-    return this.http.get<any>(this.url + 'plan');
+  makePlan(planConfig: any): Observable<any> {
+    console.log('pc');
+    console.log(planConfig);
+
+    return this.http.post<any>(this.url, planConfig);
   }
 
   addCategory(categroy) {
