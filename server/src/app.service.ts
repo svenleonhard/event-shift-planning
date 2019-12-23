@@ -21,6 +21,7 @@ export class AppService {
           return new Promise((resolve, reject) => {
             ch.consume('results', msg => {
               if (msg) {
+                ch.ack(msg);
                 return resolve(msg.content.toString());
               }
             });

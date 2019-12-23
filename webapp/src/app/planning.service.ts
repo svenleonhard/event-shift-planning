@@ -13,7 +13,9 @@ export class PlanningService {
   constructor(public http: HttpClient) { }
 
   makePlan(planConfig: any): Observable<any> {
-    return this.http.post<any>(this.url, planConfig);
+    const toRet =  this.http.post<any>(this.url, planConfig);
+    console.log(toRet);
+    return toRet;
   }
 
   addCategory(categroy) {

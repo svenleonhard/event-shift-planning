@@ -29,13 +29,15 @@ export class AppComponent {
 
   makePlan() {
 
-    console.log('make planpressed');
+    console.log('make plan pressed');
     const planConfig = {
       categories: this.categories,
       employees: this.employees
     };
 
     this.planningService.makePlan(planConfig).subscribe(plan => {
+      console.log('plan');
+      console.log(plan);
       this.plan = plan;
     });
   }

@@ -6,7 +6,8 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post()
-  makePlan(@Body()planConfig: any): any {
+  makePlan(@Body() planConfig: any): any {
+    Logger.log('Make Plan');
     return this.appService.getPlan(planConfig).then(plan => {
       Logger.log('plan finished:');
       Logger.log(plan);
