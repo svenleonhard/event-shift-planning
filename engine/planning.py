@@ -32,10 +32,41 @@ class GAPlanning:
         logger.info('individual generator: %s', gens)  
         return gens
 
+    def greedy(self, number_of_genes, number_of_shifts, upper_limit):
+
+        solution = []
+        forbidden_employees = []
+
+        for s in range(number_of_shifts):
+            shift = []
+            for x in range(number_of_genes):
+
+                if len(forbidden_employees) == upper_limit:
+                    forbidden_employees = []
+                
+                employee_list = self.fitness_calculation.get_list_of_prefered_employees(x)
+                count = -1
+                employee = employee_list[count]['id']
+                while employee in shift or employee in forbidden_employees:
+                    count = count - 1
+                    employee = employee_list[count]['id']
+
+                forbidden_employees.append(employee)
+                shift.append(employee)
+
+            solution.append(shift)
+
+        logging.info('Greedy Solution: %s', solution)
+        return solution
+
     def population(self, number_of_individuals,
                 number_of_genes, number_of_shifts, upper_limit, lower_limit):
-        return [self.individual(number_of_genes, number_of_shifts, upper_limit, lower_limit) 
-            for x in range(number_of_individuals)]
+        population = [self.individual(number_of_genes, number_of_shifts, upper_limit, lower_limit) 
+            for x in range(number_of_individuals - 1)]
+
+        population.append(self.greedy(number_of_genes, number_of_shifts, upper_limit))
+
+        return population
 
     def selection(self, generation, method='Fittest Half'):
         fittest_half = int(len(generation)) // 2
@@ -73,8 +104,12 @@ class GAPlanning:
             mated_parnet_0.genstring[shift] = self.order_crossover(parents[1].genstring[shift], section_to_insert_1, length, left_index)
             mated_parent_1.genstring[shift] = self.order_crossover(parents[0].genstring[shift], section_to_insert_2, length, left_index)
 
-            offsprings.append(parents[0])
-            offsprings.append(parents[1])
+       
+            mated_parnet_0.fitness = self.fitness_calculation.calculate(mated_parnet_0.genstring)
+            mated_parent_1.fitness = self.fitness_calculation.calculate(mated_parent_1.genstring)
+            
+            offsprings.append(mated_parnet_0)
+            offsprings.append(mated_parent_1)
 
         return offsprings
 
@@ -152,8 +187,6 @@ class GAPlanning:
             new_fitness = self.fitness_calculation.calculate(individual.genstring)
             individual.fitness = new_fitness
 
-        #elit.fitness = self.fitness_calculation.calculate(elit.genstring)
-
         unsorted_individuals = mutated + [elit_copy]
 
         next_gen = sorted(unsorted_individuals, key=lambda individual: individual.fitness)
@@ -196,7 +229,24 @@ class GAPlanning:
             if len(gen) > 20:
                 print(fitness_max)
                 break
-            
+        
+
+            if len(gen) > 10:
+                count = -10
+
+                last_element_euqal = True
+
+                while last_element_euqal and count < -1:
+                    last_element_euqal = fitness_max[count] == fitness_max[count + 1]
+
+                    if not last_element_euqal:
+                        break
+                    count = count + 1
+
+                if last_element_euqal:
+                    print(fitness_max)
+                    break
+
             selection = 1
 
             gen.append(self.next_generation(gen[-selection],upper_limit,lower_limit))

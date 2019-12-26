@@ -31,7 +31,7 @@ class FitnessCalculator:
                     if individual[s][i] == employee_id:
                         uptime = uptime + 1
             downtime = len(individual) - uptime
-            downtime_value = downtime_value + downtime*2
+            downtime_value = downtime_value + (downtime*2)**2
         
         return downtime_value
 
@@ -39,16 +39,14 @@ class FitnessCalculator:
     def get_preference_for_worker(self, worker_id, category):
         preference = self.preference_matrix[worker_id-1, category]
         if preference == 0:
-            return -2
-        return preference
+            return -3
+        return preference*2
 
-    def get_list_of_prefered_employees(self, category, search_space):
-        prefered_employees = []
+    def get_list_of_prefered_employees(self, category):
+        employee_preferences = []
+        for e in range(len(self.preference_matrix)):
+            employee_preferences.append({ 'id' : e + 1, 'preference' : self.preference_matrix[e][category] })
 
-        preference_value = 2
-        while len(prefered_employees) == 0:
-            for e in range(len(self.preference_matrix)):
-                if self.preference_matrix[e][category] == preference_value and not self.preference_matrix[e][category] + 1 in search_space:
-                    prefered_employees.append(e+1)
-            preference_value = preference_value - 1
-        return prefered_employees
+        return sorted(employee_preferences, key=lambda employee: employee['preference'])
+
+     

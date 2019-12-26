@@ -18,6 +18,6 @@ class ShiftPlanning:
         self.number_of_shifts = number_of_shifts
         
     def plan(self):
-        planning_result = self.planner.solve(20, self.number_of_tasks, self.number_of_shifts, self.number_of_employees,1)
+        planning_result = self.planner.solve(15, self.number_of_tasks, self.number_of_shifts, self.number_of_employees,1)
         return planning_result[-1]
 
