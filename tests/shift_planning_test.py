@@ -1,7 +1,7 @@
 from context import engine
 from engine import ShiftPlanning
 import numpy as np
-import yaml, sys
+import yaml, sys, logging
 
 if __name__== "__main__":
 
@@ -26,22 +26,36 @@ if __name__== "__main__":
 
             preferenecs = np.array(preference_matrix)
 
-            shift_planning = ShiftPlanning(preferenecs)
+            shift_planning = ShiftPlanning(preferenecs, 2)
 
             plan = shift_planning.plan()
 
+            logging.info(plan)
+
             new_dict = []
-            for i in range(len(plan)):
-                print('Task: ', tasks[i], 'Worker: ', workers[plan[i] - 1 ])
-                name = workers[plan[i] - 1]
-                new_pair = {
+        
+            for s in range(len(plan)):
+                print('Shift: ', s)
+                planList = []
+                for i in range(len(plan[s])):
+                    print('Task: ', tasks[i], 'Worker: ', workers[plan[s][i] - 1 ], " ", data[workers[plan[s][i] - 1 ]][tasks[i]])
+                    name = workers[plan[s][i] - 1]
+
+                    new_pair = {
                     'task' : tasks[i],
                     'worker' : name
+                    }
+                    planList.append(planList)
+                shift = {
+                    'shift' : s,
+                    'plan' : planList
                 }
-
-                new_dict.append(new_pair)
+                new_dict.append(shift)
 
             print(str(new_dict))
+
+        
+
             sys.stdout.flush()
             
 

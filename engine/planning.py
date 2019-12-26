@@ -14,21 +14,33 @@ class GAPlanning:
     def __init__(self, fitness_calculation):
         self.fitness_calculation = fitness_calculation
 
-    def individual(self, number_of_genes, upper_limit, lower_limit):
+    def individual(self, number_of_genes, number_of_shifts, upper_limit, lower_limit):
         gens=[]
 
-        for x in range(number_of_genes):
-            random_int = randint(lower_limit,upper_limit + 1)
-            while random_int in gens:
-                random_int = randint(lower_limit,upper_limit + 1)
-            gens.append(random_int)
+        for s in range(number_of_shifts):
+            shift = []
+            for x in range(number_of_genes):
+                prefered_employees = self.fitness_calculation.get_list_of_prefered_employees(x, shift)
+
+                employee = None
+                for prefered_employee in prefered_employees:
+                    if not prefered_employee in shift:
+                        employee = prefered_employee
+
+                if not employee:
+                    employee = randint(lower_limit,upper_limit + 1)
+                    while employee in shift:
+                        employee = randint(lower_limit,upper_limit + 1)
+
+                shift.append(employee)
+            gens.append(shift)
 
         logger.info('individual generator: %s', gens)  
         return gens
 
     def population(self, number_of_individuals,
-                number_of_genes, upper_limit, lower_limit):
-        return [self.individual(number_of_genes, upper_limit, lower_limit) 
+                number_of_genes, number_of_shifts, upper_limit, lower_limit):
+        return [self.individual(number_of_genes, number_of_shifts, upper_limit, lower_limit) 
             for x in range(number_of_individuals)]
 
 
@@ -109,18 +121,27 @@ class GAPlanning:
     def mating(self, parents, method='Order'):
         if method == 'Order':
             offsprings = []
-            length = len(parents[0])
+
+            shift = randint(0, len(parents[0]))
+
+            length = len(parents[0][shift])
 
             high = max(1, length - 2)
             left_index = randint(0, high)
             high = max(left_index + 2, length - 1)
             right_index = randint(left_index + 1, high)
 
-            section_to_insert_1 = parents[0][left_index:right_index]
-            section_to_insert_2 = parents[1][left_index:right_index]
+            section_to_insert_1 = parents[0][shift][left_index:right_index]
+            section_to_insert_2 = parents[1][shift][left_index:right_index]
 
-            offsprings.append(self.order_crossover(parents[1], section_to_insert_1, length, left_index))
-            offsprings.append(self.order_crossover(parents[0], section_to_insert_2, length, left_index))
+            mated_parnet_0 = parents[0].copy()
+            mated_parent_1 = parents[1].copy()
+
+            mated_parnet_0[shift] = self.order_crossover(parents[1][shift], section_to_insert_1, length, left_index)
+            mated_parent_1[shift] = self.order_crossover(parents[0][shift], section_to_insert_2, length, left_index)
+
+            offsprings.append(mated_parnet_0)
+            offsprings.append(mated_parent_1)
 
         if method == 'Single Point':
             pivot_point = randint(1, len(parents[0]))
@@ -170,11 +191,6 @@ class GAPlanning:
 
     def mutation(self, individual, upper_limit, lower_limit, muatation_rate=2, 
         method='Replace', standard_deviation = 0.001):
-        gene = [randint(0, 7)]
-        for x in range(muatation_rate-1):
-            gene.append(randint(0, 7))
-            while len(set(gene)) < len(gene):
-                gene[x] = randint(0, 7)
         mutated_individual = individual.copy()
         if method == 'Gauss':
             for x in range(muatation_rate):
@@ -185,23 +201,27 @@ class GAPlanning:
                 mutated_individual[x] = round(rnd()* \
                     (upper_limit-lower_limit)+lower_limit,1)
         if method == 'Replace':
-            new_gene = randint(lower_limit, upper_limit)
-            position = randint(0, len(individual) - 1)
-            if new_gene in individual:
-                gene_index = individual.index(new_gene)
-                old_gene = mutated_individual[position]
-                mutated_individual[position] = new_gene
-                mutated_individual[gene_index] = old_gene
-            else:
-                mutated_individual[position] = new_gene
+
+            for x in range(muatation_rate):
+                new_gene = randint(lower_limit, upper_limit + 1)
+                shift = randint(0, len(individual) - 1)
+                position = randint(0, len(individual[shift]) - 1)
+                
+                if new_gene in individual[shift]:
+                    gene_index = individual[shift].index(new_gene)
+                    old_gene = mutated_individual[shift][position]
+                    mutated_individual[shift][position] = new_gene
+                    mutated_individual[shift][gene_index] = old_gene
+                else:
+                    mutated_individual[shift][position] = new_gene
 
         return mutated_individual
 
     def next_generation(self, gen, upper_limit, lower_limit):
         elit = {}
         next_gen = {}
-        elit['Individuals'] = gen['Individuals'].pop(-1)
-        elit['Fitness'] = gen['Fitness'].pop(-1)
+        elit['Individuals'] = gen['Individuals'].pop(-2)
+        elit['Fitness'] = gen['Fitness'].pop(-2)
         selected = self.selection(gen)
         parents = self.pairing(elit, selected)
         offsprings = [[[self.mating(parents[x])
@@ -246,7 +266,7 @@ class GAPlanning:
         return result
 
     def first_generation(self, pop):
-        fitness = [self.fitness_calculation.calculate(pop[x]) 
+        fitness = [self.fitness_calculation.calculate(pop[x])
             for x in range(len(pop))]
         sorted_fitness = sorted([[pop[x], fitness[x]]
             for x in range(len(pop))], key=lambda x: x[1])
@@ -256,9 +276,9 @@ class GAPlanning:
             for x in range(len(sorted_fitness))]
         return {'Individuals': population, 'Fitness': sorted(fitness)}
 
-    def solve(self, number_of_individuals, number_of_genes, upper_limit, lower_limit):
+    def solve(self, number_of_individuals, number_of_genes, number_of_shifts, upper_limit, lower_limit):
 
-        pop = self.population(number_of_individuals, number_of_genes, upper_limit, lower_limit)
+        pop = self.population(number_of_individuals, number_of_genes, number_of_shifts, upper_limit, lower_limit)
         gen = []
         gen.append(self.first_generation(pop))
         fitness_avg = np.array([sum(gen[0]['Fitness'])/
@@ -267,15 +287,17 @@ class GAPlanning:
 
         finish = False
         while finish == False:
-            if max(fitness_max) > 100:
+            if len(gen) > 10:
+                print(fitness_max)
                 break
-            if max(fitness_avg) > 75:
-                break
-            if self.fitness_similarity_chech(fitness_max, 50) == True:
-                break
-            gen.append(self.next_generation(gen[-1],upper_limit,lower_limit))
-            fitness_avg = np.append(fitness_avg, sum(
-                gen[-1]['Fitness'])/len(gen[-1]['Fitness']))
-            fitness_max = np.append(fitness_max, max(gen[-1]['Fitness']))
+            
+            selection = 2
+            if len(gen) < 2:
+                selection = 1
 
-        return gen[-1]
+            gen.append(self.next_generation(gen[-selection],upper_limit,lower_limit))
+            fitness_avg = np.append(fitness_avg, sum(
+                gen[-selection]['Fitness'])/len(gen[-selection]['Fitness']))
+            fitness_max = np.append(fitness_max, max(gen[-selection]['Fitness']))
+
+        return gen[-2]
