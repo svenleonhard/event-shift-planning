@@ -140,15 +140,64 @@ class GAPlanning:
         
         return offspring
 
-    def mutation(self, individual, upper_limit, lower_limit, muatation_rate=4, 
+    def local_optimisation(self, individual):
+        for s in range(len(individual.genstring)):
+            for c in range(len(individual.genstring[s])):
+                if self.fitness_calculation.get_preference_for_worker(individual.genstring[s][c], c) <= 0:
+                    prefered_employees = self.fitness_calculation.get_list_of_prefered_employees(c)
+                    prefered_employees.reverse()
+                    success = False
+                    shift = s
+                    while not success:
+                        for employee in prefered_employees:
+                            if employee['id'] in individual.genstring[shift]:
+                                try:
+                                    position = individual.genstring[s].index(employee['id'])
+                                    if self.fitness_calculation.get_preference_for_worker(employee['id'], position) >= 0 and self.fitness_calculation.get_preference_for_worker(individual.genstring[s][c], position) >= 0:
+                                        individual.genstring[shift][position] = individual.genstring[shift][c]
+                                        individual.genstring[shift][c] = employee['id']
+                                        success = True
+                                        break
+                                except Exception as e:
+                                    logging.error(e)
+                        if shift < len(individual.genstring):
+                            shift = shift + 1
+                        else:
+                            shift = 0
+
+        individual.fitness = self.fitness_calculation.calculate(individual.genstring)
+        return individual
+
+
+    def mutation(self, individual, upper_limit, lower_limit, muatation_rate=3, 
         method='Replace', standard_deviation = 0.001):
 
         if method == 'Replace':
 
             for x in range(muatation_rate):
-                new_gene = randint(lower_limit, upper_limit + 1)
+                
                 shift = randint(0, len(individual.genstring))
                 position = randint(0, len(individual.genstring[shift]) - 1)
+
+                prefered_employees = self.fitness_calculation.get_list_of_prefered_employees(position)
+
+                preference_sum = 0
+                preference_list = []
+                for employee in prefered_employees:
+                    new_preference_value = (employee['preference']-2)**2
+                    preference_sum  = preference_sum + new_preference_value + 1
+                    preference_list.append(new_preference_value + 1)
+
+                preference_list_normalized = []
+                for i in preference_list:
+                    preference_list_normalized.append(float(i)/preference_sum)
+
+                preference_list_normalized_sum = sum(preference_list_normalized)
+
+                preference_list_normalized[0] = preference_list_normalized[0] + (1.0-preference_list_normalized_sum)
+                    
+                prefernece = np.random.choice(np.arange(0, len(preference_list)), p=preference_list_normalized)
+                new_gene = prefered_employees[prefernece]['id']
                 
                 if new_gene in individual.genstring[shift]:
                     gene_index = individual.genstring[shift].index(new_gene)
@@ -216,6 +265,7 @@ class GAPlanning:
 
         return sorted_individuals
 
+
     def solve(self, number_of_individuals, number_of_genes, number_of_shifts, upper_limit, lower_limit):
 
         pop = self.population(number_of_individuals, number_of_genes, number_of_shifts, upper_limit, lower_limit)
@@ -231,8 +281,8 @@ class GAPlanning:
                 break
         
 
-            if len(gen) > 10:
-                count = -10
+            if len(gen) > 5:
+                count = -5
 
                 last_element_euqal = True
 
@@ -253,4 +303,5 @@ class GAPlanning:
            
             fitness_max = np.append(fitness_max, max(individual.fitness for individual in (gen[-selection])))
 
-        return gen[-2]
+        individual = gen[-selection]
+        return self.local_optimisation(individual[-1])

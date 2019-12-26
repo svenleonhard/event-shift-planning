@@ -26,7 +26,7 @@ if __name__== "__main__":
 
             preferenecs = np.array(preference_matrix)
 
-            shift_planning = ShiftPlanning(preferenecs, 20)
+            shift_planning = ShiftPlanning(preferenecs, 4)
 
             plan = shift_planning.plan()
 

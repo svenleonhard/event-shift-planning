@@ -39,7 +39,7 @@ class FitnessCalculator:
     def get_preference_for_worker(self, worker_id, category):
         preference = self.preference_matrix[worker_id-1, category]
         if preference == 0:
-            return -3
+            return -4
         return preference*2
 
     def get_list_of_prefered_employees(self, category):

@@ -4,8 +4,8 @@ from .fitness_calculator import FitnessCalculator
 class ShiftPlanning:
 
     def __init__(self, preferences, number_of_shifts):
-        fitness_calculator = FitnessCalculator(preferences)
-        self.planner = GAPlanning(fitness_calculator)
+        self.fitness_calculator = FitnessCalculator(preferences)
+        self.planner = GAPlanning(self.fitness_calculator)
 
         self.number_of_employees = len(preferences)
 
@@ -18,6 +18,12 @@ class ShiftPlanning:
         self.number_of_shifts = number_of_shifts
         
     def plan(self):
-        planning_result = self.planner.solve(15, self.number_of_tasks, self.number_of_shifts, self.number_of_employees,1)
-        return planning_result[-1]
+
+        best_plan = self.planner.solve(12, self.number_of_tasks, self.number_of_shifts, self.number_of_employees,1)
+        for i in range(5):
+            next_plan = self.planner.solve(12, self.number_of_tasks, self.number_of_shifts, self.number_of_employees,1)
+            if next_plan.fitness > best_plan.fitness:
+                best_plan = next_plan
+
+        return best_plan
 
