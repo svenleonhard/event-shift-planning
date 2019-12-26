@@ -28,7 +28,7 @@ if __name__== "__main__":
 
             fitness_calculator = FitnessCalculator(preferenecs)
 
-            individual = [[2, 6, 5, 4, 1], [5, 8, 3, 2, 4]]
+            individual = [[4, 1, 8, 2, 3], [4, 1, 3, 8, 7]]
 
             fitness = fitness_calculator.calculate(individual)
 

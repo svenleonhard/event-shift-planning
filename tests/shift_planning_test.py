@@ -33,13 +33,14 @@ if __name__== "__main__":
             logging.info(plan)
 
             new_dict = []
-        
-            for s in range(len(plan)):
+            logging.info(plan.genstring)
+            for s in range(len(plan.genstring)):
+                
                 print('Shift: ', s)
                 planList = []
-                for i in range(len(plan[s])):
-                    print('Task: ', tasks[i], 'Worker: ', workers[plan[s][i] - 1 ], " ", data[workers[plan[s][i] - 1 ]][tasks[i]])
-                    name = workers[plan[s][i] - 1]
+                for i in range(len(plan.genstring[s])):
+                    print('Task: ', tasks[i], 'Worker: ', workers[plan.genstring[s][i] - 1 ], " ", data[workers[plan.genstring[s][i] - 1 ]][tasks[i]])
+                    name = workers[plan.genstring[s][i] - 1]
 
                     new_pair = {
                     'task' : tasks[i],
